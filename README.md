@@ -13,8 +13,10 @@ For equations that can be rendered in a single line, smoltex opens a new window 
 
 ## Installation
 
+Since `llmatex` is a CLI application built and run from Python, it is recommended that you install it via `pipx` to isolate the program from your global interpreter. You can install `pipx` via homebrew.
+
 ```bash
-pip install llamatex
+pipx install llamatex
 ```
 
 For local generation support:

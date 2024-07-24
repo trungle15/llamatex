@@ -1,0 +1,163 @@
+Metadata-Version: 2.1
+Name: smoltex
+Version: 0.2.1
+Summary: Convert natural language descriptions to LaTeX equations
+Author: maharshi, snowclipsed
+Requires-Python: >=3.9,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Provides-Extra: local
+Requires-Dist: groq (>=0.9.0,<0.10.0)
+Requires-Dist: llama_cpp_python (>=0.2.82,<0.3.0) ; extra == "local"
+Requires-Dist: matplotlib (>=3.9.1,<4.0.0)
+Requires-Dist: rich (>=13.7.0,<14.0.0)
+Requires-Dist: torch (>=2.3.1,<3.0.0) ; extra == "local"
+Requires-Dist: transformers (>=4.42.3,<5.0.0) ; extra == "local"
+Description-Content-Type: text/markdown
+
+# smoltex
+
+Convert natural language descriptions to LaTeX equations within your terminal in under one second!
+
+
+## features
+
+You can use smoltex for either a single instruction or to directly edit a given markdown file.
+
+> For the equations that can be rendered in a single line, it will open a new window where the rendered equation will be shown.
+
+Example for a single instruction.
+
+- **Negative Log Likelihood loss in ML**
+![NLL](https://i.ibb.co/bLVC133/nll.png)
+
+
+To edit a markdown file directly using smoltex, you can specify the start and end delimiters (identifiers) between which your instructions should be.
+
+Consider your markdown file has some content like:
+
+```markdown
+Einstein said that:
+<start> an equation for einstein's field equations </start>
+
+In quantum mechanics, there is something called the wave function:
+
+<start> notation of the wave function </start>
+```
+
+And you want to replace your instructions between `<start>` and `</start>` with the actual latex equations, you can use smoltex to help you out. In the command, specify the input file to edit along with the start and end delimiters using the `-sd` and `-ed` options respectively:
+
+```shell
+smoltex -f ./example.md -sd "<start>" -ed "</start>"
+```
+
+smoltex will directly edit the markdown file and replace your instructions with the latex equations.
+
+An example:
+
+- **Edit markdown file**
+![markdown](https://i.ibb.co/qjCdcHB/markdown.png)
+
+## how to use?
+
+smoltex can be used in two ways:
+
+1. External API generation
+2. Local generation
+
+
+**Using External API generation**
+
+> For the API, this project uses [Groq](https://groq.com) platform for very fast response generation, so you will need to setup an API key for it. Groq provides a free tier API for personal usage.
+
+To use external API generation, follow the steps below.
+
+**Step 1: setup**
+
+- Visit the [Groq console](https://console.groq.com/docs/quickstart) to create your API key for free.
+
+- Then in the terminal of your choice, paste the below line:
+
+    ```shell
+    export GROQ_API_KEY=<your-api-key-here>
+    ```
+
+or add this line to your `.bashrc` or `.zshrc` file for persistent usage.
+
+
+**Step 2: use**
+
+In the current terminal session, the command for using smoltex is `smoltex` followed by the natural language description of the latex equation you want:
+
+```shell
+smoltex "equation for cross entropy"
+```
+
+**Local generation**
+
+We use `llama_cpp_python`, `pytorch`, and `transformers` if you want to have local generations.
+
+Follow the steps below.
+
+1. Install `llama-cpp-python` with your device's accelerator.
+    - For CUDA-enabled devices:
+    ```shell
+    CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python
+    ```
+
+    - For MacOS M-chips:
+    ```shell
+    CMAKE_ARGS="-DGGML_METAL=on" pip install llama-cpp-python
+    ```
+
+    - Otherwise:
+    ```
+    pip install llama-cpp-python
+    ```
+
+2. Install smoltex:
+
+```shell
+pip install "smoltex[local]"
+```
+
+3. Use
+
+```shell
+smoltex "equation for cross entropy"
+```
+
+The output will be the latex string of the requested description. You can paste the equation in any latex renderer to see the result.
+
+
+While using smoltex you can specify something called "servers" using the `-s` or `--server` argument. Basically, you can either use `groq` or `llama-cpp` as a server for your generations. As of now, `groq` is the default server.
+
+## available models
+
+Using the `-m` or `--model_name` option, you can choose to generate the latex string with different models as well. Available models (as of now) are:
+
+```
+Llama 3 variants:
+- llama3-8b
+- llama3-70b
+
+Gemma variants:
+- gemma-7b
+- gemma2
+
+Mistral variants:
+- mixtral-8x7b
+
+Phi3 (available locally only)
+- phi-3-mini
+```
+
+**Example command for different models**:
+
+```shell
+smoltex "equation for cross entropy" -m "mixtral-8x7b-32768"
+```
+

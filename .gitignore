@@ -1,0 +1,13 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Poetry
+.poetry/
+.poetry.lock
+
+# Virtual environment
+venv/
+env/
